@@ -1,0 +1,8 @@
+- name: Ngin  hosts: webservers
+  roles:
+    - roles/webserver_role
+
+- name: Play to setup the loadbalancer
+  hosts: balance
+  roles:
+    - role/lb_role
