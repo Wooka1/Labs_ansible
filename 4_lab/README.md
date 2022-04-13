@@ -29,3 +29,14 @@
         - Создадим папку vars, где будут хранится переменные, которые испольюзуются во многих файлах. Процесс автоматизирован.
 - Запускаем playbook, заходим в браузер, вводим адреса всех серверов из inventory и проверяем
  
+# Скриншоты:
+
+![Alt text](https://github.com/Wooka1/Labs_ansible/blob/master/4_lab/screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202022-04-13%2016-39-42.png "web1")
+![Alt text](https://github.com/Wooka1/Labs_ansible/blob/master/4_lab/screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202022-04-13%2016-41-48.png "web1")
+------------------------------------
+
+- Вводим Virtual IP. Если выводит сервер - всё отлично.
+- Затем проверяем случай отказа одного из backend-серверов. Выключаем один из них и снова проверяем Virtual IP.
+# Скриншот после отключения haproxy1:
+
+![Alt text](https://github.com/Wooka1/Labs_ansible/blob/master/4_lab/screenshots/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202022-04-13%2016-52-28.png "web1")
