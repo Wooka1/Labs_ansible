@@ -1,0 +1,8 @@
+- name: postgresql-1
+  hosts: 
+    - server
+  roles:
+    - roles/clients
+  tags: pb-host-server
+ 
+

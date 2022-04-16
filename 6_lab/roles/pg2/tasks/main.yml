@@ -1,0 +1,108 @@
+---
+
+- name: Download web
+  yum:
+    name: https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+  tags: without-postgres
+
+#   yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+#   yum install -y postgresql14-server
+#   /usr/pgsql-14/bin/initdb -D /var/lib/pgsql/14/data
+#   mkdir /wal
+#   chown -R postgres.postgres /wal
+#   chown -R postgres.postgres /var/lib/pgsql/14/data
+#   echo 'host replication  all 192.168.14.0/24  trust' >> pg_hba.conf
+#   rm -rf /var/lib/pgsql/14/data/postgresql.conf
+#   printf "listen_addresses = '*' \n wal_level = 'replica' \n archive_mode = on \n archive_command = 'test ! -f /wal/%f && cp %p /wal/%f'" >> postgresql.conf
+#   systemctl start postgresql-14.service
+#   su - root
+#   su - postgres
+#   psql
+#   create role replicant 
+
+- name: Install pgsql
+  yum:
+    name: postgresql14-server
+  tags: without-postgres
+
+- name: Ensure PostgreSQL database is initialized.
+  shell: "/usr/pgsql-14/bin/initdb -D /var/lib/pgsql/14/data"
+  become_user: postgres
+  become: yes
+  tags: init
+
+- name: WAL
+  file: path=/wal state=directory owner=postgres group=postgres
+
+- name: MODE-wal
+  ansible.builtin.file:
+    path: /wal
+    state: directory
+    recurse: yes
+    owner: postgres
+    group: postgres
+
+
+- name: MODE-var/lib/pgsql
+  ansible.builtin.file:
+    path: /var/lib/pgsql/14/data
+    state: directory
+    recurse: yes
+    owner: postgres
+    group: postgres
+
+# - name: Pg_hba-config
+#   postgresql_pg_hba:
+#     dest: /var/lib/pgsql/14/data/pg_hba.conf
+#     contype: host
+#     users: replication
+#     source: 192.168.14.0/24
+#     databases: all
+#     method: trust
+#   notify:
+#     - restart postgres 
+
+- name: pg_hba.config
+  file:
+    src: pg_hba.conf
+    dest: /var/lib/pgsql/14/data/pg_hba.conf
+    owner: postgres
+    group: postgres
+  notify:
+    - restart postgres
+  tags: pg_hba
+
+    
+- name: postgres-config
+  file:
+    src: postgresql.conf
+    dest: /var/lib/pgsql/14/data/postgresql.conf
+    owner: postgres
+    group: postgres
+  notify:
+    - restart postgres 
+  tags: postgresql
+
+- name: Reload config
+  systemd:
+    name: postgresql-14.service
+    state: restarted
+    enabled: yes
+
+#community.postgresql
+
+# - name: create ROLE replicant
+#   postgresql_user:
+#     db: postgres
+#     login_unix_socket: /var/run/postgresql
+#     name: replicant
+#     password: replicant
+#     role_attr_flags: LOGIN,REPLICATION
+
+
+
+
+
+
+    
+    
